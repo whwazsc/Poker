@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>德州扑克</title>
+</head>
+<body>
+{%load static%}
+<script type="text/javascript" src="{% static 'js/aes.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/rsa.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/lib.js' %}"></script>
+<form action="/home/" method="post" onsubmit="return CreateUser()">
+    {% csrf_token %}
+    用户名：<input type="text" name="username" id="username">
+    <input type="hidden" name="enkey" id="enkey">
+    <input type="hidden" name="sign" id="sign">
+    <button type="submit">创建用户</button>
+</form>
+
+<script type="text/javascript">
+    var public_key = "{{public_key}}";
+    function GeneKey(){
+        var key = new Array();
+        for(var i = 0; i < 16; i++){
+            key[i] = Math.floor(Math.random() * 256);
+        }
+        return key;
+    }
+    function CreateUser(){
+        var username = document.getElementById("username").value;
+        username = LTrim(username);
+        username = RTrim(username);
+        if(username == ""){
+            alert("用户名不能为空！");
+            return false;
+        }
+        var crypt = new JSEncrypt();
+        crypt.setPublicKey(public_key);
+        var key = GeneKey();
+        sessionStorage.setItem("key", JSON.stringify(key));
+        var strKey = aesjs.utils.hex.fromBytes(key);
+        var enKey = crypt.encrypt(strKey);
+        var keyEle = document.getElementById("enkey");
+        keyEle.value = enKey;
+        username = document.getElementById("username").value;
+        sign = aes_encrypt(username, key);
+        var signEle = document.getElementById("sign");
+        signEle.value = sign;
+        sessionStorage.setItem("public_key", public_key);
+        sessionStorage.setItem("username", username);
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+
+</head>
+<body>
+{%load static%}
+<script type="text/javascript" src="{% static 'js/aes.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/rsa.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/lib.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/md5.js' %}"></script>
+<div>
+    房间密码：<input type="text" name="roompwd" id="roompwd">
+</div>
+<div>
+    <button type="button" onclick="CreateRoom()">创建房间</button>
+    <button type="button" onclick="GotoRoom()">进入房间</button>
+</div>
+<form name="croom" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="userid">
+    <input type="hidden" name="username">
+    <input type="hidden" name="sign">
+</form>
+<script type="text/javascript">
+    var id = "{{id}}";
+    var sign = "{{sign}}";
+    var key = sessionStorage.getItem("key");
+    key = JSON.parse(key);
+    var public_key = sessionStorage.getItem("public_key");
+    var verify = new JSEncrypt();
+    verify.setPublicKey(public_key);
+    if(!verify.verify(id, sign, md5)){
+        window.location.href = "/illegal/";
+    }
+    id = aes_decrypt(id, key);
+    sessionStorage.setItem("id", id);
+    function CreateRoom(){
+        var roomEle = document.getElementById("roompwd");
+        var roompwd = roomEle.value;
+        if(IsEmpty(roompwd)){
+            alert("房间密码不能为空！");
+            return false;
+        }
+        var money = prompt("初始金额：");
+        var moneyInt = parseInt(money, 10);
+        if(isNaN(moneyInt)){
+            alert("金额错误！" + money);
+            return false;
+        }
+        if(moneyInt <= 0){
+            alert("金额错误！");
+            return false;
+        }
+        var bet = prompt("注码：");
+        var betInt = parseInt(money, 10);
+        if(isNaN(betInt)){
+            alert("注码错误！" + bet);
+            return false;
+        }
+        if(betInt <= 0 || betInt > moneyInt){
+            alert("注码错误！");
+            return false;
+        }
+        var id = sessionStorage.getItem("id");
+        var username = sessionStorage.getItem("username");
+        var url = "/createroom?";
+        var sign = aes_encrypt(id + username + roompwd + money + bet, key);
+        var cipher = new JSEncrypt();
+        cipher.setPublicKey(public_key);
+        roompwd = cipher.encrypt(roompwd);
+        money = cipher.encrypt(money);
+        id = cipher.encrypt(id);
+        username = cipher.encrypt(username);
+        bet = cipher.encrypt(bet);
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState == 4){
+                eval("var success=" + xhr.responseText);
+                if(success["success"]){
+                    info = success["info"]
+                    sign = success["sign"]
+                    if(!cipher.verify(info, sign, md5))
+                        window.location.href = "/illegal/";
+                    else{
+                        pwd = aes_decrypt(info, key);
+                        var newsign = aes_encrypt(id + username + pwd, key);
+                        var formsubmit = document.forms["croom"];
+                        formsubmit["userid"].value = id;
+                        formsubmit["username"].value = username;
+                        formsubmit["sign"].value = newsign;
+                        formsubmit.action = "/room/" + pwd + "/";
+                        formsubmit.submit();
+                    }
+                }
+                else
+                    alert("房间已创建！");
+            }
+        }
+        var para = "id=" + encodeURIComponent(id) + "&username=" + encodeURIComponent(username) + "&roompwd=" + encodeURIComponent(roompwd) + "&money=" + encodeURIComponent(money) + "&sign=" + encodeURIComponent(sign) + "&bet=" + encodeURIComponent(bet);
+        xhr.open("get", url + para);
+        xhr.send(null);
+    }
+    function GotoRoom(){
+        var roomEle = document.getElementById("roompwd");
+        var roompwd = roomEle.value;
+        var id = sessionStorage.getItem("id");
+        var username = sessionStorage.getItem("username");
+        var sign = aes_encrypt(id + username + roompwd, key);
+        var cipher = new JSEncrypt();
+        var url = "/gotoroom?"
+        cipher.setPublicKey(public_key);
+        roompwd = cipher.encrypt(roompwd);
+        id = cipher.encrypt(id);
+        username = cipher.encrypt(username);
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState == 4){
+                eval("var success=" + xhr.responseText);
+                if(success["success"]){
+                    info = success["info"]
+                    sign = success["sign"]
+                    if(!cipher.verify(info, sign, md5))
+                        window.location.href = "/illegal/";
+                    else{
+                        pwd = aes_decrypt(info, key);
+                        var newsign = aes_encrypt(id + username + pwd, key);
+                        var formsubmit = document.forms["croom"];
+                        formsubmit["userid"].value = id;
+                        formsubmit["username"].value = username;
+                        formsubmit["sign"].value = newsign;
+                        formsubmit.action = "/room/" + pwd + "/";
+                        formsubmit.submit();
+                    }
+                }
+                else
+                    alert("房间未创建！");
+            }
+        }
+        var para = "id=" + encodeURIComponent(id) + "&username=" + encodeURIComponent(username) + "&roompwd=" + encodeURIComponent(roompwd) + "&sign=" + encodeURIComponent(sign);
+        xhr.open("get", url + para);
+        xhr.send(null);
+    }
+</script>
+</body>
+</html>

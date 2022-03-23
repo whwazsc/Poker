@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>房间</title>
+</head>
+{%load static%}
+<body background="{% static 'img/background.png'%}">
+<script type="text/javascript" src="{% static 'js/aes.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/rsa.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/lib.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/md5.js' %}"></script>
+<style type="text/css">
+    img{
+    display:block;
+    margin:0 auto;
+    }
+    #div1{
+    text-align:center;
+    //border:1px solid #000;
+    height:110px;
+    width:100%;
+    }
+    #div2{
+    //border:1px solid #000;
+    height:160px;
+    width:100%;
+    }
+    #div3{
+    //border:1px solid #000;
+    height:240px;
+    width:100%;
+    }
+    #div4{
+    //border:1px solid #000;
+    height:260px;
+    width:100%;
+    }
+    #div5{
+    //border:1px solid #000;
+    height:50px;
+    width:100%;
+    }
+
+    .card{
+    border:1px dashed #000;
+    height:80px;
+    width:60px;
+    display:inline-block;
+    border-radius:10px 10px;
+    }
+    .padding{
+    height: 100%;
+    //border:1px solid #000;
+    display:inline-block;
+    }
+    .userbtn{
+    width:50px;
+    height:25px;
+    }
+</style>
+<div style="width:1425px">
+<div id="div1">
+    <div style="width: 100%;height: 30px;"></div>
+    <div class="card">
+        <img id="card51">
+    </div>
+    <div class="card">
+        <img id="card52">
+    </div>
+</div>
+<div id="div2">
+    <div class="padding" style="width: 520px;">
+        <div style="float:right;width: 100%;">
+            <div class="card" style="float:right;margin: 0px 10px 0px 5px">
+                <img id="card61">
+            </div>
+            <div class="card" style="float:right">
+                <img id="card62">
+            </div>
+        </div>
+        <div style="float:right;width:100%;">
+            <button class="userbtn" style="float:right;margin:0px 50px 0px 0px;" id="sit6" onclick="usersit('sit6', 'money6')">sit</button>
+        </div>
+        <div style="float:right;width:100%;">
+            <div style="float:right;margin:0px 50px 0px 0px" id="money6">money</div>
+        </div>
+    </div>
+    <div class="padding" style="width: 370px;">
+        <div style="float:right;width:100%;text-align:center;">
+            <button class="userbtn" style="margin: 0px 0px 0px 0px" id="sit5" onclick="usersit('sit5', 'money5')">sit</button>
+        </div>
+        <div style="float:right;width:100%;text-align:center;">
+            <div id="money5">money</div>
+        </div>
+        <div style="float:right;width:100%;height:40px;"></div>
+        <div style="float:right;width:100%;text-align:center;" id="pool">
+            pool:0
+        </div>
+        <div style="float:right;width:100%;text-align:center;margin:6px 0px 0px 0px" id="betting">
+            betting:0
+        </div>
+        <div style="float:right;width:100%;text-align:center;margin:6px 0px 0px 0px" id="count">
+            count:0
+        </div>
+    </div>
+    <div class="padding" style="width: 520px">
+        <div style="float:left;width: 100%;">
+            <div class="card" style="float:left;margin: 0px 5px 0px 20px">
+                <img id="card41">
+            </div>
+            <div class="card" style="float:left">
+                <img id="card42">
+            </div>
+        </div>
+        <div style="float:left;width:100%;">
+            <button class="userbtn" style="float:left;margin:0px 0px 0px 50px;" id="sit4" onclick="usersit('sit4', 'money4')">sit</button>
+        </div>
+        <div style="float:left;width:100%;">
+            <div style="float:left;margin:0px 0px 0px 55px" id="money4">money</div>
+        </div>
+    </div>
+</div>
+<div id="div3">
+    <div class="padding" style="width:400px">
+        <div style="width: 100%; height: 50px;"></div>
+        <div style="float:right;width: 100%;">
+            <div class="card" style="float:right;margin: 0px 10px 0px 5px">
+                <img id="card71">
+            </div>
+            <div class="card" style="float:right">
+                <img id="card72">
+            </div>
+        </div>
+        <div style="float:right;width:100%;">
+            <button class="userbtn" style="float:right;margin:0px 50px 0px 0px;" id="sit7" onclick="usersit('sit7', 'money7')">sit</button>
+        </div>
+        <div style="float:right;width:100%;">
+            <div style="float:right;margin:0px 50px 0px 0px" id="money7">money</div>
+        </div>
+    </div>
+    <div class="padding" style="width:630px;">
+        <div style="width:100%;height:90px;">
+            <button id="begin" style="float:right;margin:0px 290px 0px 0px;width:60px;height:25px;" onclick="begingame();">begin</button>
+        </div>
+        <div style="width:100%;height:90px;">
+            <div class="card" style="float:left;margin:0px 10px 0px 120px">
+                <img id="public1">
+            </div>
+            <div class="card" style="float:left;margin:0px 10px 0px 10px">
+                <img id="public2">
+            </div>
+            <div class="card" style="float:left;margin:0px 10px 0px 10px">
+                <img id="public3">
+            </div>
+            <div class="card" style="float:left;margin:0px 10px 0px 10px">
+                <img id="public4">
+            </div>
+            <div class="card" style="float:left;margin:0px 10px 0px 10px">
+                <img id="public5">
+            </div>
+        </div>
+    </div>
+    <div class="padding" style="width:380px;">
+        <div style="width: 100%; height: 50px;"></div>
+        <div style="float:left;width: 100%;">
+            <div class="card" style="float:left;margin: 0px 5px 0px 20px">
+                <img id="card31">
+            </div>
+            <div class="card" style="float:left">
+                <img id="card32">
+            </div>
+        </div>
+        <div style="float:left;width:100%;">
+            <button class="userbtn" style="float:left;margin:0px 0px 0px 60px;" id="sit3" onclick="usersit('sit3', 'money3')">sit</button>
+        </div>
+        <div style="float:left;width:100%;">
+            <div style="float:left;margin:0px 0px 0px 65px" id="money3">money</div>
+        </div>
+    </div>
+</div>
+<div id="div4">
+    <div class="padding" style="width: 520px;">
+        <div style="width:100%;height:80px;"></div>
+        <div style="float:right;width: 100%;">
+            <div class="card" style="float:right;margin: 0px 10px 0px 5px">
+                <img id="card81">
+            </div>
+            <div class="card" style="float:right">
+                <img id="card82">
+            </div>
+        </div>
+        <div style="float:right;width:100%;">
+            <button class="userbtn" style="float:right;margin:0px 50px 0px 0px;" id="sit8" onclick="usersit('sit8', 'money8')">sit</button>
+        </div>
+        <div style="float:right;width:100%;">
+            <div style="float:right;margin:0px 50px 0px 0px" id="money8">money</div>
+        </div>
+    </div>
+    <div class="padding" style="width: 370px;">
+        <div style="width:100%;height:140px">
+            <div style="width:100%;height:50px;">
+                <button style="float:left;margin:0px 60px 0px 50px;width:60px;height:25px" onclick="userbet();">下注</button>
+                <button style="float:left;margin:0px 0px 0px 0px;width:60px;height:25px" onclick="call();">平跟</button>
+                <button style="float:left;margin:0px 0px 0px 50px;width:60px;height:25px" onclick="check();">过/弃</button>
+            </div>
+            <div style="width:100%;height:60px;float:left;margin:0px 50px 0px 125px;">
+                <input id="numbet">
+            </div>
+        </div>
+        <div style="width: 100%;">
+                <div class="card" style="float:left;margin: 0px 5px 0px 130px">
+                    <img id="card11">
+                </div>
+                <div class="card" style="float:left">
+                    <img id="card12">
+                </div>
+        </div>
+        <div style="float:left;width:100%;">
+            <button class="userbtn" style="float:left;margin:0px 0px 0px 170px;" id="sit1" onclick="usersit('sit1', 'money1')">sit</button>
+        </div>
+        <div style="float:left;width:100%;">
+            <div style="float:left;margin:0px 0px 0px 175px" id="money1">money</div>
+        </div>
+    </div>
+    <div class="padding" style="width: 520px">
+        <div style="width:100%;height:80px;"></div>
+        <div style="float:left;width: 100%;">
+            <div class="card" style="float:left;margin: 0px 5px 0px 20px">
+                <img id="card21">
+            </div>
+            <div class="card" style="float:left">
+                <img id="card22">
+            </div>
+        </div>
+        <div style="float:left;width:100%;">
+            <button class="userbtn" style="float:left;margin:0px 0px 0px 50px;" id="sit2" onclick="usersit('sit2', 'money2')">sit</button>
+        </div>
+        <div style="float:left;width:100%;">
+            <div style="float:left;margin:0px 0px 0px 55px" id="money2">money</div>
+        </div>
+    </div>
+</div>
+<div id="div5">
+    <button style="width: 60px; height: 25px;float: right;" onclick="exit();">退出</button>
+</div>
+</div>
+<script type="text/javascript">
+    var money = {{money}};
+    var id = sessionStorage.getItem("id");
+    var key = sessionStorage.getItem("key");
+    var username = sessionStorage.getItem("username");
+    key = JSON.parse(key);
+    var public_key = sessionStorage.getItem("public_key");
+    var cipher = new JSEncrypt();
+    cipher.setPublicKey(public_key);
+    var verify = new JSEncrypt();
+    verify.setPublicKey(public_key);
+    var eid = cipher.encrypt(id);
+    var eusername = cipher.encrypt(username);
+    var si = aes_encrypt(id + username, key);
+    var isset = false;
+    var sitlist = [[null, null], [null, null], [null, null], [null, null], [null, null], [null, null], [null, null], [null, null]];
+	var imgbuff = new Image();
+	var cards1 = ["02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14"];
+	var cards2 = ["h", "s", "c", "d"];
+	for(var i = 0; i < cards1.length; i++)
+		for(var j = 0; j < cards2.length; j++)
+			imgbuff.src = "/static/cards/" + cards1[i] + cards2[j] + ".png";
+	imgbuff.src = "/static/cards/back.png";
+    getsit();
+    var getstatus = window.setInterval(getStatus, 500);
+    function usersit(posi, mon){
+        var sign = aes_encrypt(id + username + posi, key);
+        var uposi = cipher.encrypt(posi);
+        url = "./sit?" + "id=" + encodeURIComponent(eid) + "&username=" + encodeURIComponent(eusername) + "&sit=" + encodeURIComponent(uposi) + "&sign=" + encodeURIComponent(sign);
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState == 4){
+                eval("var result=" + xhr.responseText);
+                if(result["success"]){
+                    updatesit(posi, mon);
+                    isset = true;
+                }
+                else
+                    alert("房间已被销毁！");
+            }
+        }
+        xhr.open("get", url);
+        xhr.send(null);
+    }
+    function updatesit(posi, mon){
+        var p = document.getElementById(posi);
+        var t = document.getElementById(mon);
+        var find = false;
+        var i, n;
+        for(i = 0; i < 8; i++){
+            if(sitlist[i][0] == id){
+                find = true;
+                break;
+            }
+        }
+        if(find){
+            sitlist[i][0] = null;
+            sitlist[i][1] = null;
+            var q = document.getElementById("sit" + (i + 1).toString());
+            q.innerHTML = "sit";
+            q.disabled = false;
+            var m = document.getElementById("money" + (i + 1).toString());
+            m.innerHTML = "money";
+        }
+        n = parseInt(posi[3], 10) - 1;
+        sitlist[n][0] = id;
+        sitlist[n][1] = username;
+        p.disabled = true;
+        p.innerHTML = username;
+        var o = money.toString();
+        t.innerHTML = padmoney(o);
+    }
+    function padmoney(mon){
+    var l = mon.length;
+    if(l == 1)
+        mon = "&#x3000;&#x3000;" + mon + "&#x3000;&#x3000;";
+    else if(l == 2)
+        mon = "&#x3000;" + mon + "&#x3000;&#x3000;";
+    else if(l == 3)
+        mon = "&#x3000;" + mon + "&#x3000;";
+    else if(l == 4)
+        mon = "&#x3000;" + mon;
+    return mon
+    }
+    function getsit(){
+        var url = "./getsit?" + "id=" + encodeURIComponent(eid) + "&username=" + encodeURIComponent(eusername) + "&sign=" + encodeURIComponent(si);
+        var xhr = new XMLHttpRequest();
+        var p;
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState == 4){
+                eval("var result=" + xhr.responseText);
+                if(result["success"]){
+                    var dic = result["result"];
+                    var s = result["sign"];
+                    dic = aes_decrypt(dic, key);
+                    if(verify.verify(dic, s, md5)){
+                        eval("var dict=" + dic);
+                        for(var each in dict){
+                            p = document.getElementById(each);
+                            if(each.substr(0, 5) == "money")
+                                p.innerHTML = padmoney(dict[each].toString());
+                            else if(each == "begin")
+                                p.disabled = dict[each];
+                            else{
+                                p.innerHTML = dict[each][1];
+                                sitlist[parseInt(each[3], 10) - 1][0] = dict[each][0].toString();
+                                sitlist[parseInt(each[3], 10) - 1][1] = dict[each][1];
+                                p.disabled = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        xhr.open("get", url);
+        xhr.send(null);
+    }
+    function getStatus(){
+        if(!isset)
+            return false;
+        var imgpath = "/static/cards/";
+        var url = "./getstatus?" + "id=" + encodeURIComponent(eid) + "&username=" + encodeURIComponent(eusername) + "&sign=" + encodeURIComponent(si);
+        var xhr = new XMLHttpRequest();
+        var p;
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState == 4){
+                eval("var result=" + xhr.responseText);
+                if(result["success"]){
+                    var dic = result["result"];
+                    var s = result["sign"];
+                    dic = aes_decrypt(dic, key);
+                    if(verify.verify(dic, s, md5)){
+                        eval("var dict=" + dic);
+                        for(var each in dict){
+                            p = document.getElementById(each);
+                            if(each.substr(0, 5) == "money"){
+                                if(dict[each] != null)
+                                    p.innerHTML = padmoney(dict[each].toString());
+                                else
+                                    p.innerHTML = "money";
+                            }
+                            else if(each.substr(0, 3) == "sit"){
+                                if(dict[each][1] != null){
+                                    p.innerHTML = dict[each][1];
+                                    sitlist[parseInt(each[3], 10) - 1][0] = dict[each][0].toString();
+                                    sitlist[parseInt(each[3], 10) - 1][1] = dict[each][1];
+                                    p.disabled = true;
+                                }
+                                else{
+                                    p.innerHTML = "sit";
+                                    sitlist[parseInt(each[3], 10) - 1][0] = null;
+                                    sitlist[parseInt(each[3], 10) - 1][1] = null;
+                                    p.disabled = false;
+                                }
+                            }
+                            else if(each == "banker"){
+                                for(var k = 1; k < 9; k++){
+                                    p = document.getElementById("sit" + k.toString());
+                                    if(k == dict[each])
+                                        p.style.color = "#00FFFF";
+                                    else
+                                        p.style.color = "#000000";
+                                }
+                            }
+                            else if(each.substr(0, 4) == "card"){
+                                if(dict[each])
+                                    p.src = imgpath + dict[each] + ".png";
+                                else
+                                    p.src = "";
+                            }
+                            else if(each == "op"){
+                                for(var k = 1; k < 9; k++){
+                                    p = document.getElementById("money" + k.toString());
+                                    if(k == dict[each])
+                                        p.style.color = "#FF0000";
+                                    else
+                                        p.style.color = "#000000";
+                                }
+                            }
+                            else if(each == "betting")
+                                p.innerHTML = "betting:" + dict[each].toString();
+                            else if(each == "pool")
+                                p.innerHTML = "pool:" + dict[each].toString();
+                            else if(each == "count")
+                                p.innerHTML = "count:" + dict[each].toString();
+                            else if(each.substr(0, 6) == "public"){
+                                if(dict[each])
+                                    p.src = imgpath + dict[each] + ".png";
+                                else
+                                    p.src = "";
+                            }
+							else if(each == "begin")
+								p.disabled = dict[each]
+                        }
+                    }
+                }
+            }
+        }
+        xhr.open("get", url);
+        xhr.send(null);
+    }
+    function begingame(){
+        var xhr = new XMLHttpRequest();
+        var url = "./begingame?" + "id=" + encodeURIComponent(eid) + "&username=" + encodeURIComponent(eusername) + "&sign=" + encodeURIComponent(si);
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState == 4){
+                eval("var result=" + xhr.responseText);
+                if(!result["success"])
+                    alert("有玩家未入座或余额不足！");
+            }
+        }
+        xhr.open("get", url);
+        xhr.send(null);
+    }
+    function userbet(){
+        var betnum = document.getElementById("numbet").value;
+        var betnumInt = parseInt(betnum, 10);
+        if(isNaN(betnumInt)){
+            alert("金额错误！" + betnumInt);
+            return false;
+        }
+        if(betnumInt <= 0){
+            alert("金额错误！");
+            return false;
+        }
+        var sign = aes_encrypt(id + username + betnum, key);
+        betnum = cipher.encrypt(betnum);
+        var xhr = new XMLHttpRequest();
+        var url = "./bet?" + "id=" + encodeURIComponent(eid) + "&username=" + encodeURIComponent(eusername) + "&bet=" + encodeURIComponent(betnum) + "&sign=" + encodeURIComponent(sign);
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState == 4){
+                eval("var result=" + xhr.responseText);
+                if(!result["success"]){
+                    var info = result["info"];
+                    sign = result["sign"];
+                    info = aes_decrypt(info, key);
+                    if(!verify.verify(info, sign, md5))
+                        window.location.href = "/illegal/";
+                    else
+                        alert(info);
+                }
+            }
+        }
+        xhr.open("get", url);
+        xhr.send(null);
+    }
+    function call(){
+        var xhr = new XMLHttpRequest();
+        var url = "./call?" + "id=" + encodeURIComponent(eid) + "&username=" + encodeURIComponent(eusername) + "&sign=" + encodeURIComponent(si);
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState == 4){
+                eval("var result=" + xhr.responseText);
+                if(!result["success"]){
+                    var info = result["info"];
+                    sign = result["sign"];
+                    info = aes_decrypt(info, key);
+                    if(!verify.verify(info, sign, md5))
+                        window.location.href = "/illegal/";
+                    else
+                        alert(info);
+                }
+            }
+        }
+        xhr.open("get", url);
+        xhr.send(null);
+    }
+    function check(){
+        var xhr = new XMLHttpRequest();
+        var url = "./check?" + "id=" + encodeURIComponent(eid) + "&username=" + encodeURIComponent(eusername) + "&sign=" + encodeURIComponent(si);
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState == 4){
+                eval("var result=" + xhr.responseText);
+                if(!result["success"]){
+                    var info = result["info"];
+                    sign = result["sign"];
+                    info = aes_decrypt(info, key);
+                    if(!verify.verify(info, sign, md5))
+                        window.location.href = "/illegal/";
+                    else
+                        alert(info);
+                }
+            }
+        }
+        xhr.open("get", url);
+        xhr.send(null);
+    }
+    function exit(){
+        var xhr = new XMLHttpRequest();
+        var url = "./exit?" + "id=" + encodeURIComponent(eid) + "&username=" + encodeURIComponent(eusername) + "&sign=" + encodeURIComponent(si);
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState == 4){
+                eval("var result=" + xhr.responseText);
+                if(!result["success"]){
+                    alert("fail");
+                }
+                else
+                    window.location.href = "/returnhome?" + "id=" + encodeURIComponent(eid) + "&username=" + encodeURIComponent(eusername) + "&sign=" + encodeURIComponent(si);
+            }
+        }
+        xhr.open("get", url);
+        xhr.send(null);
+    }
+</script>
+</body>
+</html>
