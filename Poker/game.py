@@ -25,7 +25,7 @@ class Player:
             eachroom.delete(self)
             if len(eachroom.players) == 0:
                 self.g.rooms.remove(eachroom)
-                print(eachroom.pwd, "delete")
+                #print(eachroom.pwd, "delete")
                 del eachroom
 
 class Room:
@@ -434,7 +434,8 @@ class Room:
         try:
             self.players.remove(player)
         except:
-            print(player.id, "not in the room", self.players)
+            #print(player.id, "not in the room", self.players)
+            pass
         try:
             posi = self.situser.index(player)
             self.sitlist[posi] = [None, None]
@@ -443,10 +444,10 @@ class Room:
             self.ischange.pop(player)
             player.room.remove(self)
         except Exception as s:
-            print(player.id, "exiterror!")
-            print(s)
-            #pass
-        print(player.id, "exit!")
+            #print(player.id, "exiterror!")
+            #print(s)
+            pass
+        #print(player.id, "exit!")
         for each in self.ischange:
             self.ischange[each] = True
         return True
@@ -460,10 +461,10 @@ class Game:
         self.players = []
         self.rooms = []
         self.playersLock = threading.Lock()
-        print("正在启动游戏！")
+        #print("正在启动游戏！")
         self.deleteThread = threading.Thread(target = self.deleteplayer)
         self.deleteThread.start()
-        print("启动游戏成功！")
+        #print("启动游戏成功！")
 
     def createplayer(self, name, key, sign):
         if len(self.players) > 40:
@@ -496,7 +497,7 @@ class Game:
             for eachplayer in self.players.copy():
                 if datetime.datetime.now() - eachplayer.time > std:
                     self.players.remove(eachplayer)
-                    print("delete:", eachplayer.id, eachplayer.name)
+                    #print("delete:", eachplayer.id, eachplayer.name)
                     eachplayer.delself()
             self.playersLock.release()
             time.sleep(300)
