@@ -95,7 +95,7 @@ class Room:
         #if not self.ischange[player]:
         #    return False
         while player in self.ischange and self.ischange[player] == False:
-            pass
+            time.sleep(0.5)
         if player not in self.ischange:
             return False
         self.ischange[player] = False
