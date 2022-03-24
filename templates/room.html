@@ -269,7 +269,8 @@
 			imgbuff.src = "/static/cards/" + cards1[i] + cards2[j] + ".png";
 	imgbuff.src = "/static/cards/back.png";
     getsit();
-    var getstatus = window.setInterval(getStatus, 800);
+	getStatus();
+    //var getstatus = window.setInterval(getStatus, 800);
     function usersit(posi, mon){
         var sign = aes_encrypt(id + username + posi, key);
         var uposi = cipher.encrypt(posi);
@@ -363,8 +364,6 @@
         xhr.send(null);
     }
     function getStatus(){
-        if(!isset)
-            return false;
         var imgpath = "/static/cards/";
         var url = "./getstatus?" + "id=" + encodeURIComponent(eid) + "&username=" + encodeURIComponent(eusername) + "&sign=" + encodeURIComponent(si);
         var xhr = new XMLHttpRequest();
@@ -437,8 +436,9 @@
                                     p.src = "";
                             }
 							else if(each == "begin")
-								p.disabled = dict[each]
+								p.disabled = dict[each];
                         }
+					setTimeout(getStatus, 100);
                     }
                 }
             }
