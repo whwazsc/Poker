@@ -92,7 +92,11 @@ class Room:
 
     def getStatus(self, player):
         dic = {}
-        if not self.ischange[player]:
+        #if not self.ischange[player]:
+        #    return False
+        while player in self.ischange and self.ischange[player] == False:
+            pass
+        if player not in self.ischange:
             return False
         self.ischange[player] = False
         if self.status == 0:

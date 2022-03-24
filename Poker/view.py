@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from . import game, rsa, aes
-import re, json
+import re, json, threading
 from django.views.decorators.csrf import csrf_exempt
 
 def readfile(file):
@@ -195,8 +195,7 @@ def getsit(request, pwd):
         dic["sign"] = sign
         return JsonResponse(dic)
 
-def getstatus(request, pwd):
-    dic = {"success": False}
+def getstatus_thread(request, pwd, dic):
     if request.GET:
         eid = request.GET["id"]
         eusername = request.GET["username"]
@@ -206,29 +205,29 @@ def getstatus(request, pwd):
         try:
             id = int(id)
         except:
-            return JsonResponse(dic)
+            return
         player = G.findplayer(id, username)
         if not player:
-            return JsonResponse(dic)
+            return
         room = G.findroom(pwd)
         if not room:
-            return JsonResponse(dic)
+            return
         success = room.findplayer(player)
         if not success:
-            return JsonResponse(dic)
+            return
         success = player.verify(str(id) + username, sign)
         if not success:
-            return JsonResponse(dic)
+            return
         result = room.getStatus(player)
         if not result:
-            return JsonResponse(dic)
+            return
         result = json.dumps(result)
         sign = RSA.rsa_sign(result)
         result = player.cipher.text_encrypt(result)
         dic["success"] = True
         dic["result"] = result
         dic["sign"] = sign
-        return JsonResponse(dic)
+        return
 
 def begingame(request, pwd):
     dic = {"success": False}
@@ -420,3 +419,10 @@ def returnhome(request):
         sign = RSA.rsa_sign(id)
         dic["sign"] = sign
         return render(request, "home.html", dic)
+
+def getstatus(request, pwd):
+    dic = {"success": False}
+    t = threading.Thread(target = getstatus_thread, args = (request, pwd, dic))
+    t.start()
+    t.join()
+    return JsonResponse(dic)
