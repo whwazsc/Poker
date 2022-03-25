@@ -78,7 +78,7 @@ class Room:
         self.situser[n] = player
         for each in self.ischange:
             self.ischange[each] = True
-        self.ischange[player] = True
+        #self.ischange[player] = True
         return True
 
     def getSitStatus(self):
@@ -95,7 +95,7 @@ class Room:
         #if not self.ischange[player]:
         #    return False
         while player in self.ischange and self.ischange[player] == False:
-            time.sleep(0.5)
+            time.sleep(0.4)
         if player not in self.ischange:
             return False
         self.ischange[player] = False
@@ -542,6 +542,7 @@ class Game:
         room = Room(pwd, intmoney, player, intbet)
         self.rooms.append(room)
         player.room.append(room)
+        room.ischange[player] = True
         return True, player.cipher.text_encrypt(pwd)
 
     def gotoroom(self, id, username, pwd, sign):
@@ -562,6 +563,7 @@ class Game:
         croom.players.append(player)
         croom.usermoney[player] = croom.money
         player.room.append(croom)
+        croom.ischange[player] = True
         return True, player.cipher.text_encrypt(pwd)
 
 
