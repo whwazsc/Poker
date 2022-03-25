@@ -444,12 +444,15 @@ class Room:
             posi = self.situser.index(player)
             self.sitlist[posi] = [None, None]
             self.situser[posi] = None
-            self.usermoney.pop(player)
-            self.ischange.pop(player)
-            player.room.remove(self)
         except Exception as s:
             #print(player.id, "exiterror!")
             #print(s)
+            pass
+        try:
+            player.room.remove(self)
+            self.usermoney.pop(player)
+            self.ischange.pop(player)            
+        except:
             pass
         #print(player.id, "exit!")
         for each in self.ischange:
