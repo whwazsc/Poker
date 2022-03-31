@@ -106,6 +106,7 @@ class Room:
         self.event.wait()
         self.event.clear()
         if player not in self.ischange:
+            self.event.set()
             return False
         self.ischange[player] = False
         self.event.set()
@@ -470,6 +471,7 @@ class Room:
             #print(player.id, "exiterror!")
             #print(s)
             pass
+        print(self.event.isSet())
         self.event.wait()
         self.event.clear()
         try:
@@ -478,10 +480,11 @@ class Room:
             self.ischange.pop(player)            
         except:
             pass
-        #print(player.id, "exit!")
+        print(player.id, "exit!")
         for each in self.ischange:
             self.ischange[each] = True
         self.event.set()
+        print(self.event.isSet())
         return True
 
 

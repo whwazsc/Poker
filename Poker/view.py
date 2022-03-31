@@ -390,7 +390,7 @@ def delete(request, pwd):
             dic["success"] = True
         if len(room.players) == 0:
             G.rooms.remove(room)
-            print(room.pwd, "delete!")
+            #print(room.pwd, "delete!")
             del room
         player.set_time()
         return JsonResponse(dic)
