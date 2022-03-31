@@ -39,6 +39,8 @@ class Room:
         self.usermoney = {player: money}
         self.situser = [None] * 8
         self.status = 0
+        self.event = threading.Event()
+        self.event.set()
         self.poke = poke.Poke()
         self.banker = None
         self.banker2 = None
@@ -76,9 +78,12 @@ class Room:
         self.sitlist[n][0] = id
         self.sitlist[n][1] = username
         self.situser[n] = player
+        self.event.wait()
+        self.event.clear()
         for each in self.ischange:
             self.ischange[each] = True
         #self.ischange[player] = True
+        self.event.set()
         return True
 
     def getSitStatus(self):
@@ -94,11 +99,16 @@ class Room:
         dic = {}
         #if not self.ischange[player]:
         #    return False
+        self.event.wait()
         while player in self.ischange and self.ischange[player] == False:
+            self.event.wait()
             time.sleep(0.4)
+        self.event.wait()
+        self.event.clear()
         if player not in self.ischange:
             return False
         self.ischange[player] = False
+        self.event.set()
         if self.status == 0:
             for i in range(1, 9):
                 dic["sit" + str(i)] = self.sitlist[i - 1]
@@ -240,8 +250,11 @@ class Room:
             if self.situser[i]:
                 for j in range(2):
                     self.usercards[i][j] = self.poke.game_poke.pop()
+        self.event.wait()
+        self.event.clear()
         for each in self.ischange:
             self.ischange[each] = True
+        self.event.set()
         return True
 
     def getbanker(self):
@@ -287,8 +300,11 @@ class Room:
         self.betting = max(self.userbetlist)
         if verify:
             self.nextstatus()
+        self.event.wait()
+        self.event.clear()
         for each in self.ischange:
             self.ischange[each] = True
+        self.event.set()
         return True, ""
 
     def nextstatus(self):
@@ -397,12 +413,18 @@ class Room:
                     i += 1
             if i == 1:
                 self.end()
+                self.event.wait()
+                self.event.clear()
                 for each in self.ischange:
                     self.ischange[each] = True
+                self.event.set()
                 return True, ""
         self.nextstatus()
+        self.event.wait()
+        self.event.clear()
         for each in self.ischange:
             self.ischange[each] = True
+        self.event.set()
         return True, ""
 
     def end(self):
@@ -448,6 +470,8 @@ class Room:
             #print(player.id, "exiterror!")
             #print(s)
             pass
+        self.event.wait()
+        self.event.clear()
         try:
             player.room.remove(self)
             self.usermoney.pop(player)
@@ -457,6 +481,7 @@ class Room:
         #print(player.id, "exit!")
         for each in self.ischange:
             self.ischange[each] = True
+        self.event.set()
         return True
 
 
@@ -542,7 +567,10 @@ class Game:
         room = Room(pwd, intmoney, player, intbet)
         self.rooms.append(room)
         player.room.append(room)
+        room.event.wait()
+        room.event.clear()
         room.ischange[player] = True
+        room.event.set()
         return True, player.cipher.text_encrypt(pwd)
 
     def gotoroom(self, id, username, pwd, sign):
@@ -563,7 +591,10 @@ class Game:
         croom.players.append(player)
         croom.usermoney[player] = croom.money
         player.room.append(croom)
+        croom.event.wait()
+        croom.event.clear()
         croom.ischange[player] = True
+        croom.event.set()
         return True, player.cipher.text_encrypt(pwd)
 
 
