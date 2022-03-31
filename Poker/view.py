@@ -422,7 +422,8 @@ def returnhome(request):
 
 def getstatus(request, pwd):
     dic = {"success": False}
-    t = threading.Thread(target = getstatus_thread, args = (request, pwd, dic))
-    t.start()
-    t.join()
+    #t = threading.Thread(target = getstatus_thread, args = (request, pwd, dic))
+    #t.start()
+    #t.join()
+    getstatus_thread(request, pwd, dic)
     return JsonResponse(dic)
